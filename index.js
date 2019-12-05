@@ -54,6 +54,25 @@ app.delete("/api/users/:id", (req, res) => {
   }
 });
 
+// route to update the user
+app.put("/api/users/:id", (req, res) => {
+  const id = req.params.id;
+
+  if (!req.body.name || !req.body.bio) {
+    return res
+      .status(400)
+      .json({ errorMessage: "Please provide name and bio for the user." });
+  }
+
+  const updatedUser = {
+    name: req.body.name,
+    bio: req.body.bio,
+    updated_at: Date.now()
+  };
+
+  db.update(id, updatedUser).then(update => res.json(update));
+});
+
 // server start
 const port = 8080;
 const host = "127.0.0.1";
