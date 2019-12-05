@@ -7,11 +7,14 @@ const app = express();
 app.use(express.json());
 
 //routes
+
+// route to get all the users
 app.get("/api/users", (req, res) => {
   //   res.json(db);
-  db.find();
+  db.find().then(users => res.json(users));
 });
 
+// route to add a user to the db
 app.post("/api/users", (req, res) => {
   if (!req.body.name || !req.body.bio) {
     return res
@@ -30,23 +33,22 @@ app.post("/api/users", (req, res) => {
   res.status(201).json(newUser);
 });
 
+// route to grab a specific user based on the id of the user
 app.get("/api/users/:id", (req, res) => {
   const id = req.params.id;
-  const user = db.findById(id);
-  if (user) {
-    res.json(user);
+  if (id) {
+    db.findById(id).then(user => res.json(user));
   } else {
     res.status(404).json({ error: "User not found" });
   }
 });
 
+// route to delete the user from the database
 app.delete("/api/users/:id", (req, res) => {
   const id = req.params.id;
-  const user = db.findById(id);
 
-  if (user) {
-    db = db.filter(row => row.id !== id);
-    res.json(user);
+  if (id) {
+    db.remove(id).then(user => res.json(user));
   } else {
     res.status(404).json({ error: "User not found" });
   }
