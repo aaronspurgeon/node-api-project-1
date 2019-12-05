@@ -30,6 +30,28 @@ app.post("/api/users", (req, res) => {
   res.status(201).json(newUser);
 });
 
+app.get("/api/users/:id", (req, res) => {
+  const id = req.params.id;
+  const user = db.findById(id);
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({ error: "User not found" });
+  }
+});
+
+app.delete("/api/users/:id", (req, res) => {
+  const id = req.params.id;
+  const user = db.findById(id);
+
+  if (user) {
+    db = db.filter(row => row.id !== id);
+    res.json(user);
+  } else {
+    res.status(404).json({ error: "User not found" });
+  }
+});
+
 // server start
 const port = 8080;
 const host = "127.0.0.1";
